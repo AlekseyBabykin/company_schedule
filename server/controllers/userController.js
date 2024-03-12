@@ -38,7 +38,7 @@ class UserController {
     try {
       const { email, password } = req.body;
       const user = await SalesUsers.findOne({ where: { email: email } });
-      console.log(user);
+
       if (!user) {
         return next(ApiError.internal("The user was not found"));
       }
@@ -46,7 +46,7 @@ class UserController {
       if (!comparePassword) {
         return next(ApiError.internal("Invalid password"));
       }
-      const token = generateJwt(id);
+      const token = generateJwt(user.id);
       return res.json({ token });
     } catch (e) {
       next(ApiError.badRequest(e.massage));

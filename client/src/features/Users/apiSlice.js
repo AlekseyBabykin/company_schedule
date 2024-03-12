@@ -13,7 +13,7 @@ export const fetchSignUp = createAsyncThunk(
         password,
       }
     );
-    localStorage.setItem("token", response.token);
+    localStorage.setItem("token", response.data.token);
     return jwtDecode(response.token);
   }
 );
@@ -28,8 +28,8 @@ export const fetchSignIn = createAsyncThunk(
         password,
       }
     );
-    console.log(response);
-    localStorage.setItem("token", response.token);
+
+    localStorage.setItem("token", response.data.token);
     return jwtDecode(response.token);
   }
 );
