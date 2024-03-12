@@ -13,12 +13,14 @@ class UserController {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
-        return next(ApiError.badRequest("Некоректный логин или пароль"));
+        return next(ApiError.badRequest("Invalid username or password"));
       }
       const condidate = await SalesUsers.findOne({ where: { email: email } });
       if (condidate) {
         return next(
-          ApiError.badRequest("Такой логин уже есть , придумайте новый")
+          ApiError.badRequest(
+            "You already have such a username , come up with a new one"
+          )
         );
       }
       const hashedPassword = await bcrypt.hash(password, 5);
@@ -26,7 +28,7 @@ class UserController {
         email: email,
         password: hashedPassword,
       });
-      const token = generateJwt(id);
+      const token = generateJwt(user.id);
       return res.json({ token });
     } catch (e) {
       next(ApiError.badRequest(e.massage));
@@ -35,13 +37,14 @@ class UserController {
   async signin(req, res, next) {
     try {
       const { email, password } = req.body;
-      const user = await SalesUsers.findOne({ where: { email } });
+      const user = await SalesUsers.findOne({ where: { email: email } });
+      console.log(user);
       if (!user) {
-        return next(ApiError.internal("Пользователь не найден"));
+        return next(ApiError.internal("The user was not found"));
       }
       let comparePassword = bcrypt.compareSync(password, user.password);
       if (!comparePassword) {
-        return next(ApiError.internal("Неверный пароль"));
+        return next(ApiError.internal("Invalid password"));
       }
       const token = generateJwt(id);
       return res.json({ token });
