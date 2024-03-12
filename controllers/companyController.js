@@ -5,9 +5,10 @@ class CompanyController {
   async create(req, res, next) {
     try {
       const { salesUserId, name, info } = req.body;
+      console.log (req.body);
 
       const company = await CompanyBusiness.create({
-        salesUserId,
+        salesUserId, 
         name,
         info,
       });
@@ -56,6 +57,7 @@ class CompanyController {
   async infoAllCompanys(req, res, next) {
     try {
       const { salesUserId } = req.body;
+      console.log (salesUserId);
       const companies = await CompanyBusiness.findAll({
         where: { salesUserId },
       });

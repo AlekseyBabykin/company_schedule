@@ -26,7 +26,8 @@ class UserController {
         email: email,
         password: hashedPassword,
       });
-      const token = generateJwt(id);
+      const token = generateJwt(user.id); // fixed here from "id" to "user.id"
+      console.log("token", token)
       return res.json({ token });
     } catch (e) {
       next(ApiError.badRequest(e.massage));
