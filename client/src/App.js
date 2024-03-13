@@ -1,5 +1,6 @@
 import "./App.css";
 import Auth from "./pages/Auth";
+import { createContext, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import {
   BUSINESSPAGE_ROUTE,
@@ -12,14 +13,16 @@ import NavBar from "./components/NavBar";
 import BusinessPage from "./pages/BusinessPage";
 import MeetingsPage from "./pages/MeetingsPage";
 import MeetingStatisticsPage from "./pages/MeetingStatisticsPage";
+import Redirect from "./authorization/Redirect";
+
 
 function App() {
   return (
     <>
       <NavBar />
       <Routes>
-        <Route path={SIGNIN_ROUTE} element={<Auth />} />
-        <Route path={SIGNUP_ROUTE} element={<Auth />} />
+        <Route path={SIGNIN_ROUTE} element={<Redirect><Auth /></Redirect>} />
+        <Route path={SIGNUP_ROUTE} element={<Redirect><Auth /></Redirect>} />
         <Route path={BUSINESSPAGE_ROUTE} element={<BusinessPage />} />
         <Route path={MEETINGSPAGE_ROUTE} element={<MeetingsPage />} />
         <Route

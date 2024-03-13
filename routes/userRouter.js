@@ -7,6 +7,21 @@ router.post("/signin", userController.signin);
 
 router.post("/signup", userController.signup);
 
-router.get("/auth", authMiddleware, userController.userCheck);
+router.get("/auth", authMiddleware, (req,res)=> {
+    res.sendStatus(200);
+})
+router.get("/token", (req,res)=> {
+    console.log ("CHECK TOKEN");
+    console.log ("req.headers['cookie']", req.headers['cookie']);
+    const token = req.headers['cookie']; //|| || req.headers['x-access-token']
+    console.log ("token", token)
+    if (token) {
+        res.status(200).json({token:token})
+    }
+    else {
+        res.status(404).json({msg:'no token'});
+    }
+})
+// router.get("/auth", authMiddleware, userController.userCheck);
 
 module.exports = router;

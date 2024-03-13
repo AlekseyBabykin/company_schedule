@@ -13,6 +13,7 @@ const CompanyBusiness = sequelize.define("company_business", {
   info: { type: DataTypes.TEXT },
 });
 
+
 const Meetings = sequelize.define("meetings", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   details: { type: DataTypes.TEXT },

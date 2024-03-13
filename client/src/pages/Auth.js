@@ -1,89 +1,69 @@
-import React from "react";
-import {
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-} from "@mui/material";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Card, Button, Form, Container } from "react-bootstrap";
+import { useLocation, NavLink } from "react-router-dom";
 import { SIGNIN_ROUTE, SIGNUP_ROUTE } from "../utils/const";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSignIn, fetchSignUp } from "../features/Users/apiSlice";
 
 const Auth = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const location = useLocation();
   const isLogin = location.pathname === SIGNIN_ROUTE;
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  const click = async () => {
+    try {
+      if (isLogin) {
+        await dispatch(fetchSignIn({ email, password }));
+      } else {
+        await dispatch(fetchSignUp({ email, password }));
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+    }
   };
+  
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          {isLogin ? "Sign in" : "Sign up"}
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
+    <Container
+      className="d-flex flex-column justify-content-center align-items-center"
+      style={{ height: window.innerHeight - 54, backgroundColor: "grey" }}
+    >
+      <Card style={{ width: "600px" }} className="p-5">
+        <h2 className="m-auto">{isLogin ? "Login" : "Registration"}</h2>
+        <Form className="d-flex flex-column">
+          <Form.Control
+            className="mt-4"
+            type="email"
+            placeholder="write your Email..."
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
+          <Form.Control
+            className="mt-4"
             type="password"
-            id="password"
-            autoComplete="current-password"
+            placeholder="write your Password..."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            {isLogin ? "Sign in" : "Sign up"}
-          </Button>
-          <Grid container>
-            <Grid item xs></Grid>
-            <Grid item>
-              {isLogin ? (
-                <Link href={SIGNUP_ROUTE} variant="body2">
-                  Don't have an account? Sign Up
-                </Link>
-              ) : (
-                <Link href={SIGNIN_ROUTE} variant="body2">
-                  Already have an account? Sign In
-                </Link>
-              )}
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
+          <div className="d-flex  justify-content-between mt-4">
+            {isLogin ? (
+              <div>
+                no account? <NavLink to={SIGNUP_ROUTE}>Registration</NavLink>
+              </div>
+            ) : (
+              <div>
+                account exist? <NavLink to={SIGNIN_ROUTE}>apply</NavLink>
+              </div>
+            )}
+            <Button variant={"outline-success"} onClick={click}>
+              {isLogin ? "Apply" : "Registration"}
+            </Button>
+          </div>
+        </Form>
+      </Card>
     </Container>
   );
 };

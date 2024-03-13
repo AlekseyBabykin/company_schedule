@@ -2,6 +2,7 @@ const ApiError = require("../error/ApiError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SalesUsers } = require("../models/models");
+require('dotenv').config()
 
 const generateJwt = (id) => {
   return jwt.sign({ id: id }, process.env.SECRET_KEY, {
@@ -30,42 +31,55 @@ class UserController {
       console.log("token", token)
       return res.json({ token });
     } catch (e) {
-      next(ApiError.badRequest(e.massage));
+      next(ApiError.badRequest(e.message)); // fixed typo
     }
   }
   async signin(req, res, next) {
     try {
+      console.log ("signin");
       const { email, password } = req.body;
+      console.log ("email, password", email, password);
       const user = await SalesUsers.findOne({ where: { email } });
       if (!user) {
-        return next(ApiError.internal("Пользователь не найден"));
+        return next(ApiError.badRequest("Пользователь не найден")); //here better badRequest
       }
       let comparePassword = bcrypt.compareSync(password, user.password);
       if (!comparePassword) {
-        return next(ApiError.internal("Неверный пароль"));
+        return next(ApiError.badRequest("Неверный пароль")); //here better badRequest
       }
-      const token = generateJwt(id);
+      const token = generateJwt(user.id);// fixed here from "id" to "user.id"
+      //set cookies
+      // const cookies = new Cookies(req, res); cookies.set('token', token, { maxAge: 5 * 24 * 60 * 60 * 1000, httpOnly: true, })
+      res.cookie('token', token, {
+          maxAge: 5 * 24 * 60 * 60 * 1000, 
+          httpOnly: true,
+          sameSite: 'None',
+          // secure: true,
+      });
+      console.log('from usersController res.cookie', res.cookie);
       return res.json({ token });
     } catch (e) {
-      next(ApiError.badRequest(e.massage));
+      next(ApiError.badRequest(e.message));// fixed typo
     }
   }
 
-  async userCheck(req, res, next) {
-    const user = req.user;
+  async logout(req, res) {
     try {
-      const token = jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.ACCES_TOKEN_SECRET,
-        {
-          expiresIn: "24h",
-        }
-      );
-      return res.json({ token });
+      console.log ("res.cookie from logout", res.cookie);
+      res.cookie('token', '', {
+          maxAge: -1, // Immediate expiry
+          httpOnly: true,
+          sameSite: 'None',
+          secure: true,
+      });
+      return res.status(200).json({ msg: 'Logged out successfully' });
     } catch (e) {
-      next(ApiError.badRequest(e.massage));
+      next(ApiError.badRequest(e.message));
     }
-  }
+};
+
+
+
 }
 
 module.exports = new UserController();

@@ -1,79 +1,29 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  Link,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Nav, Container, Navbar, Button } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   BUSINESSPAGE_ROUTE,
   MEETINGSPAGE_ROUTE,
   MEETINGSTATISTICPAGE_ROUTE,
   SIGNIN_ROUTE,
 } from "../utils/const";
-import { useNavigate } from "react-router-dom";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+import MeetingStatisticsPage from "../pages/MeetingStatisticsPage";
 
 const NavBar = () => {
-  const classes = useStyles();
   const navigate = useNavigate();
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Link
-            href={BUSINESSPAGE_ROUTE}
-            color="inherit"
-            className={classes.title}
-          >
-            Business Page
-          </Link>
-
-          <Link
-            href={MEETINGSPAGE_ROUTE}
-            color="inherit"
-            className={classes.title}
-          >
-            Meetings Page
-          </Link>
-          <Link
-            href={MEETINGSTATISTICPAGE_ROUTE}
-            color="inherit"
-            className={classes.title}
-          >
-            Meeting Statistics Page
-          </Link>
-          <Button color="inherit" onClick={() => navigate(SIGNIN_ROUTE)}>
-            Exit
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <Navbar bg="dark" data-bs-theme="dark">
+      <Container>
+        <Navbar.Brand href="#home">LOGO</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href={BUSINESSPAGE_ROUTE}>Business Page</Nav.Link>
+          <Nav.Link href={MEETINGSPAGE_ROUTE}>Meetings Page</Nav.Link>
+          <Nav.Link href={MEETINGSTATISTICPAGE_ROUTE}>Statistics Page</Nav.Link>
+          <Nav.Link href={SIGNIN_ROUTE}>EXIT</Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
   );
 };
 

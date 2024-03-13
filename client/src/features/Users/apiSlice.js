@@ -1,34 +1,39 @@
+import { useContext} from 'react';
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+// import { AuthContext } from '../../App';
+
+const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export const fetchSignUp = createAsyncThunk(
   "api/fetchSignUp",
   async ({ email, password }) => {
-    const response = await axios.post(
-      process.env.REACT_APP_API_URL + "/api/user/signup",
-      {
-        email,
-        password,
-      }
-    );
-    localStorage.setItem("token", response.token);
-    return jwt_decode(response.token);
+    const response = await axios.post(`${apiUrl}/api/user/signup`, {
+      email,
+      password,
+    });
+    localStorage.setItem("token", response.data.token);
+    return jwtDecode(response.token);
   }
 );
 
 export const fetchSignIn = createAsyncThunk(
   "api/fetchSignIn",
   async ({ email, password }) => {
-    const response = await axios.post(
-      process.env.REACT_APP_API_URL + "/api/user/signin",
-      {
-        email,
-        password,
-      }
-    );
-    localStorage.setItem("token", response.token);
-    return jwt_decode(response.token);
+    // const {setToken} = useContext(AuthContext);
+    const response = await axios.post(`${apiUrl}/api/user/signin`, {
+      email,
+      password,
+    });
+  if (response.status === 200) {
+    console.log('from login client',response.status, response.data)
+    console.log ("response.data.token from apiSlice", response.data.token)
+    // setMessage('');
+    // navigate(`/select`); 
+  }
+    // localStorage.setItem("token", response.data.token);
+    // return jwtDecode(response.token);
   }
 );
 
