@@ -1,8 +1,6 @@
-import { useContext} from 'react';
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-// import { AuthContext } from '../../App';
 
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -21,7 +19,6 @@ export const fetchSignUp = createAsyncThunk(
 export const fetchSignIn = createAsyncThunk(
   "api/fetchSignIn",
   async ({ email, password }) => {
-    // const {setToken} = useContext(AuthContext);
     const response = await axios.post(`${apiUrl}/api/user/signin`, {
       email,
       password,
@@ -29,11 +26,9 @@ export const fetchSignIn = createAsyncThunk(
   if (response.status === 200) {
     console.log('from login client',response.status, response.data)
     console.log ("response.data.token from apiSlice", response.data.token)
-    // setMessage('');
-    // navigate(`/select`); 
+
   }
-    // localStorage.setItem("token", response.data.token);
-    // return jwtDecode(response.token);
+  // other code
   }
 );
 

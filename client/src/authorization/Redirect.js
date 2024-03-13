@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const baseURL = process.env.REACT_APP_BASE_URL || '';
@@ -45,7 +45,7 @@ const Redirect = (props) => {
             });
             if (res.status === 200) {
                 console.log('approved')
-                // navigate('/select');
+                // navigate('/......');
             } else {
                 setRedirect(true);
                 
