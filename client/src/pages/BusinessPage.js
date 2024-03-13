@@ -1,35 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, ListGroup, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCompanyCreate,
+  fetchCompanyInfo,
+} from "../features/Business/apiSliceBusiness";
 
 const BusinessPage = () => {
-  const [companies, setCompanies] = useState([
-    { name: "Company A", description: "Description of Company A" },
-    { name: "Company B", description: "Description of Company B" },
-    { name: "Company C", description: "Description of Company C" },
-    { name: "Company D", description: "Description of Company D" },
-    { name: "Company E", description: "Description of Company E" },
-  ]);
+  // const [companies, setCompanies] = useState([
+  //   { name: "Company A", description: "Description of Company A" },
+  //   { name: "Company B", description: "Description of Company B" },
+  //   { name: "Company C", description: "Description of Company C" },
+  //   { name: "Company D", description: "Description of Company D" },
+  //   { name: "Company E", description: "Description of Company E" },
+  // ]);
 
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyDescription, setNewCompanyDescription] = useState("");
+  const dispatch = useDispatch();
+  const companies = useSelector((state) => state.company.companies);
 
   const handleAddCompany = () => {
-    const newCompany = {
-      name: newCompanyName,
-      description: newCompanyDescription,
-    };
-
-    setCompanies([...companies, newCompany]);
-
-    setNewCompanyName("");
-    setNewCompanyDescription("");
+    dispatch(
+      fetchCompanyCreate({ name: newCompanyName, info: newCompanyDescription })
+    );
+    setNewCompanyName(" ");
+    setNewCompanyDescription(" ");
   };
 
   const handleDeleteCompany = (index) => {
     const updatedCompanies = [...companies];
     updatedCompanies.splice(index, 1);
-    setCompanies(updatedCompanies);
+    // setCompanies(updatedCompanies);
   };
+  useEffect(() => {
+    dispatch(fetchCompanyInfo());
+  }, [dispatch]);
   return (
     <div className="container mt-5">
       <h1>My Business Page</h1>
@@ -37,34 +43,35 @@ const BusinessPage = () => {
       <div className="mb-4">
         <h2>List of Companies</h2>
         <ListGroup>
-          {companies.map((company, index) => (
-            <Row className="m-1">
-              <ListGroup.Item
-                key={index}
-                className="d-flex justify-content-between align-items-center"
-              >
-                <Col xs={3}>
-                  <h5>{company.name}</h5>
-                </Col>
-                <Col xs={6}>
-                  <p>{company.description}</p>
-                </Col>
+          {companies.length ? (
+            companies.map((company, index) => (
+              <Row className="m-1" key={index}>
+                <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                  <Col xs={3}>
+                    <h5>{company.name}</h5>
+                  </Col>
+                  <Col xs={6}>
+                    <p>{company.description}</p>
+                  </Col>
 
-                <Col xs={3} className="d-flex justify-content-end">
-                  <Button variant="primary" size="sm" className="me-2">
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDeleteCompany(index)}
-                  >
-                    Delete
-                  </Button>
-                </Col>
-              </ListGroup.Item>
-            </Row>
-          ))}
+                  <Col xs={3} className="d-flex justify-content-end">
+                    <Button variant="primary" size="sm" className="me-2">
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDeleteCompany(index)}
+                    >
+                      Delete
+                    </Button>
+                  </Col>
+                </ListGroup.Item>
+              </Row>
+            ))
+          ) : (
+            <p>You don't have any companies</p>
+          )}
         </ListGroup>
       </div>
 

@@ -47,6 +47,7 @@ class UserController {
         return next(ApiError.internal("Invalid password"));
       }
       const token = generateJwt(user.id);
+
       return res.json({ token });
     } catch (e) {
       next(ApiError.badRequest(e.massage));

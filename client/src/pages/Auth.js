@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, Button, Form, Container } from "react-bootstrap";
-import { useLocation, NavLink } from "react-router-dom";
-import { SIGNIN_ROUTE, SIGNUP_ROUTE } from "../utils/const";
-import { useDispatch, useSelector } from "react-redux";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
+import { BUSINESSPAGE_ROUTE, SIGNIN_ROUTE, SIGNUP_ROUTE } from "../utils/const";
+import { useDispatch } from "react-redux";
 import { fetchSignIn, fetchSignUp } from "../features/Users/apiSlice";
 
 const Auth = () => {
@@ -10,15 +10,26 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const location = useLocation();
   const isLogin = location.pathname === SIGNIN_ROUTE;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
 
   const click = async () => {
+    let response;
     try {
       if (isLogin) {
-        await dispatch(fetchSignIn({ email, password }));
+        response = await dispatch(fetchSignIn({ email, password }));
+        console.log(response);
       } else {
-        await dispatch(fetchSignUp({ email, password }));
+        response = await dispatch(fetchSignUp({ email, password }));
+      }
+      if (response.payload) {
+        navigate(BUSINESSPAGE_ROUTE);
+      } else {
+        if (response.error) {
+          console.error("Authentication error:", response.error.message);
+        } else {
+          console.error("Unknown authentication error");
+        }
       }
     } catch (error) {
       console.error("Authentication error:", error);

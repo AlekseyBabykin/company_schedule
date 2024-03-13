@@ -76,11 +76,8 @@ const MeetingsPage = () => {
 
         <ListGroup>
           {meetings.map((meeting, index) => (
-            <Row>
-              <ListGroup.Item
-                key={index}
-                className="d-flex justify-content-between align-items-center m-1"
-              >
+            <Row key={index}>
+              <ListGroup.Item className="d-flex justify-content-between align-items-center m-1">
                 <Col xs={2}>
                   <h5>{meeting.businessName}</h5>
                 </Col>

@@ -37,6 +37,7 @@ class CompanyController {
     }
   }
   async delete(req, res, next) {
+    console.log("req.user=>", req);
     try {
       const { id } = req.params;
 
@@ -53,17 +54,20 @@ class CompanyController {
       next(ApiError.badRequest(e.message));
     }
   }
+
   async infoAllCompanys(req, res, next) {
     try {
-      const { salesUserId } = req.body;
+      const infoUser = req.user;
+
       const companies = await CompanyBusiness.findAll({
-        where: { salesUserId },
+        where: { salesUserId: infoUser.id },
       });
       return res.json({ companies });
     } catch (e) {
       next(ApiError.badRequest(e.message));
     }
   }
+
   async infoCompany(req, res, next) {
     try {
       const { id } = req.params;

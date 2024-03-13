@@ -7,25 +7,34 @@ const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 export const fetchSignUp = createAsyncThunk(
   "api/fetchSignUp",
   async ({ email, password }) => {
-    const response = await axios.post(`${apiUrl}/api/user/signup`, {
-      email,
-      password,
-    });
-    localStorage.setItem("token", response.data.token);
-    return jwtDecode(response.token);
+    try {
+      const response = await axios.post(`${apiUrl}/api/user/signup`, {
+        email,
+        password,
+      });
+      localStorage.setItem("token", response.data.token);
+      return jwtDecode(response.data.token);
+    } catch (error) {
+      throw error;
+    }
   }
 );
 
 export const fetchSignIn = createAsyncThunk(
   "api/fetchSignIn",
-  async ({ email, password }) => {
-    const response = await axios.post(`${apiUrl}/api/user/signin`, {
-      email,
-      password,
-    });
 
-    localStorage.setItem("token", response.data.token);
-    return jwtDecode(response.token);
+  async ({ email, password }) => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/user/signin`, {
+        email,
+        password,
+      });
+
+      localStorage.setItem("token", response.data.token);
+      return jwtDecode(response.data.token);
+    } catch (error) {
+      throw error;
+    }
   }
 );
 

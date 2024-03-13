@@ -20,7 +20,12 @@ const NavBar = () => {
           <Nav.Link href={BUSINESSPAGE_ROUTE}>Business Page</Nav.Link>
           <Nav.Link href={MEETINGSPAGE_ROUTE}>Meetings Page</Nav.Link>
           <Nav.Link href={MEETINGSTATISTICPAGE_ROUTE}>Statistics Page</Nav.Link>
-          <Nav.Link href={SIGNIN_ROUTE}>EXIT</Nav.Link>
+          <Nav.Link
+            href={SIGNIN_ROUTE}
+            onClick={() => localStorage.removeItem("token")}
+          >
+            EXIT
+          </Nav.Link>
         </Nav>
       </Container>
     </Navbar>
