@@ -2,17 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
+const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 export const fetchSignUp = createAsyncThunk(
   "api/fetchSignUp",
   async ({ email, password }) => {
-    console.log(process.env);
-    const response = await axios.post(
-      "http://localhost:5000" + "/api/user/signup",
-      {
-        email,
-        password,
-      }
-    );
+    const response = await axios.post(`${apiUrl}/api/user/signup`, {
+      email,
+      password,
+    });
     localStorage.setItem("token", response.data.token);
     return jwtDecode(response.token);
   }
@@ -21,13 +19,10 @@ export const fetchSignUp = createAsyncThunk(
 export const fetchSignIn = createAsyncThunk(
   "api/fetchSignIn",
   async ({ email, password }) => {
-    const response = await axios.post(
-      "http://localhost:5000" + "/api/user/signin",
-      {
-        email,
-        password,
-      }
-    );
+    const response = await axios.post(`${apiUrl}/api/user/signin`, {
+      email,
+      password,
+    });
 
     localStorage.setItem("token", response.data.token);
     return jwtDecode(response.token);
