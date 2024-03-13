@@ -1,31 +1,30 @@
 import React, { useState } from "react";
-import { Button, Form, ListGroup } from "react-bootstrap";
+import { Button, Form, ListGroup, Row, Col } from "react-bootstrap";
 
 const BusinessPage = () => {
-  // Состояние для списка компаний
-  const [companies, setCompanies] = useState([]);
+  const [companies, setCompanies] = useState([
+    { name: "Company A", description: "Description of Company A" },
+    { name: "Company B", description: "Description of Company B" },
+    { name: "Company C", description: "Description of Company C" },
+    { name: "Company D", description: "Description of Company D" },
+    { name: "Company E", description: "Description of Company E" },
+  ]);
 
-  // Состояния для полей новой компании
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyDescription, setNewCompanyDescription] = useState("");
 
-  // Обработчик добавления новой компании
   const handleAddCompany = () => {
-    // Создаем новый объект компании
     const newCompany = {
       name: newCompanyName,
       description: newCompanyDescription,
     };
 
-    // Добавляем компанию в список
     setCompanies([...companies, newCompany]);
 
-    // Очищаем поля ввода
     setNewCompanyName("");
     setNewCompanyDescription("");
   };
 
-  // Обработчик удаления компании
   const handleDeleteCompany = (index) => {
     const updatedCompanies = [...companies];
     updatedCompanies.splice(index, 1);
@@ -35,34 +34,40 @@ const BusinessPage = () => {
     <div className="container mt-5">
       <h1>My Business Page</h1>
 
-      {/* Список компаний */}
       <div className="mb-4">
         <h2>List of Companies</h2>
         <ListGroup>
           {companies.map((company, index) => (
-            <ListGroup.Item
-              key={index}
-              className="d-flex justify-content-between align-items-center"
-            >
-              {company.name}
-              <div>
-                <Button variant="primary" size="sm" className="me-2">
-                  Edit
-                </Button>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => handleDeleteCompany(index)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </ListGroup.Item>
+            <Row className="m-1">
+              <ListGroup.Item
+                key={index}
+                className="d-flex justify-content-between align-items-center"
+              >
+                <Col xs={3}>
+                  <h5>{company.name}</h5>
+                </Col>
+                <Col xs={6}>
+                  <p>{company.description}</p>
+                </Col>
+
+                <Col xs={3} className="d-flex justify-content-end">
+                  <Button variant="primary" size="sm" className="me-2">
+                    Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDeleteCompany(index)}
+                  >
+                    Delete
+                  </Button>
+                </Col>
+              </ListGroup.Item>
+            </Row>
           ))}
         </ListGroup>
       </div>
 
-      {/* Форма добавления новой компании */}
       <div>
         <h2>Add New Company Form</h2>
         <Form>
